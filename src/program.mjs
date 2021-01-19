@@ -27,7 +27,6 @@ export class Program {
         Object.keys(this.uniforms).forEach(key => {
             const uniform = this.uniforms[key]
             const location = gl.getUniformLocation(program, key)
-            console.log(location, program, key);
             const type = getUniformType(uniform.type)
 
             uniforms[key] = {
@@ -73,7 +72,7 @@ function createShader(gl, type, source) {
         return shader
     }
 
-    console.warn('[µgl] createShader error', gl.getShaderInfoLog(shader))
+    console.warn('[µgl] (createShader error)', gl.getShaderInfoLog(shader))
     gl.deleteShader(shader)
 }
 
@@ -96,7 +95,7 @@ function createProgram(gl, vertexShader, fragmentShader) {
     // more error info?
     // see https://github.com/mrdoob/three.js/blob/6e89128f1ae239f29f2124a43133bb3d767b19bf/src/renderers/webgl/WebGLProgram.js#L556
 
-    console.warn('[µgl] createProgram error', gl.getProgramInfoLog(program))
+    console.warn('[µgl] (createProgram error)', gl.getProgramInfoLog(program))
     gl.deleteProgram(program)
 }
 
