@@ -1,0 +1,27 @@
+{
+  "name": "ugl",
+  "version": "0.0.1",
+  "description": "µgl is a micro WebGL2 engine, made for learning purposes.",
+  "main": "lib/ugl.js",
+  "module": "src/index.mjs",
+  "sideEffects": false,
+  "scripts": {
+    "build": "microbundle build -i ./index.js -o lib/ugl.js --no-pkg-main -f umd --compress --no-sourcemap"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ayamflow/ugl.git"
+  },
+  "keywords": [
+    "webgl"
+  ],
+  "author": "Florian Morel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ayamflow/ugl/issues"
+  },
+  "homepage": "https://github.com/ayamflow/ugl#readme",
+  "devDependencies": {
+    "microbundle": "^0.13.0"
+  }
+}
