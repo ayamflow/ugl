@@ -1,3 +1,5 @@
+import { Vector2, Vector3, Vector4, Matrix3, Matrix4, Color } from './math/index.mjs'
+import { Texture } from './texture.mjs'
 
 export class Program {
     #gl
