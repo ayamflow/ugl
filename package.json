@@ -2,7 +2,7 @@
   "name": "ugl",
   "version": "0.0.1",
   "description": "µgl is a micro WebGL2 engine, made for learning purposes.",
-  "main": "lib/ugl.js",
+  "main": "src/index.mjs",
   "module": "src/index.mjs",
   "sideEffects": false,
   "scripts": {
