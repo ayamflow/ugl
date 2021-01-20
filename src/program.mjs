@@ -26,8 +26,9 @@ export class Program {
         const uniforms = {}
         Object.keys(this.uniforms).forEach(key => {
             const uniform = this.uniforms[key]
+            if (uniform.value == undefined) throw new Error(`[µgl] The uniform ${key} has no value`)
             const location = gl.getUniformLocation(program, key)
-            const type = getUniformType(uniform.type)
+            const type = getUniformType(uniform)
 
             uniforms[key] = {
                 location,
@@ -99,29 +100,20 @@ function createProgram(gl, vertexShader, fragmentShader) {
     gl.deleteProgram(program)
 }
 
-function getUniformType(type) {
-    switch (type) {
-        case 'int':
-        case 'sampler2D':
-            return 'uniform1i'
+function getUniformType(uniform) {
+    if (uniform.value instanceof Vector2) return `uniformvec2fv`
+    if (uniform.value instanceof Vector3) return `uniformvec3fv`
+    if (uniform.value instanceof Vector4) return `uniformvec4fv`
+    if (uniform.value instanceof Matrix3) return `uniformMatrixmat3fv`
+    if (uniform.value instanceof Matrix4) return `uniformMatrixmat4fv`
+    if (uniform.value instanceof Texture) return `uniform1i`
+    if (uniform.value instanceof Color) return `uniformvec3fv`
 
-        case 'float':
-            return 'uniform1f'
-
-        case 'mat2':
-        case 'mat3':
-        case 'mat4':
-            let mat = type.charAt(3)
-            return `uniformMatrix${mat}fv`
-
-        case 'vec2':
-        case 'vec3':
-        case 'vec4':
-            let vec = type.charAt(3)
-            return `uniform${vec}fv`
-
-        default:
-            console.error(`[µgl] Unknown uniform type: ${type}`)
-            return
-    }
+    // TODO:
+    // Quaternion
+    // Arrays
+    // int ?
+    
+    // Default to float
+    return 'uniform1f'
 }
