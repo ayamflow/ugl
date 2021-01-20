@@ -1,4 +1,3 @@
-const OPTIONS = ['transparent', 'depthTest', 'depthWrite', 'blending', 'side']
 
 export class Program {
     #gl
@@ -10,9 +9,10 @@ export class Program {
         
         this.uniforms = {}
         Object.keys(options).forEach(key => {
-            if (key == 'vertex' || key == 'fragment' || OPTIONS.indexOf(key) > -1) return
-
-            this.uniforms[key] = options[key]
+            const uniform = options[key]
+            if (uniform.value != undefined) {
+                this.uniforms[key] = options[key]
+            }
         })
     }
 
