@@ -52,12 +52,18 @@ export class Program {
     render(gl) {
         if (!this.#gl || this.needsUpdate) this.compile(gl)
 
-        Object.keys(this.#gl.uniforms).forEach(key => {
-            const uniform = this.#gl.uniforms[key]
-            gl[uniform.type](uniform.location, this.uniforms[key].value)
-            // console.log(key, uniform.type, uniform.location, this.uniforms[key].value);
-        })
         gl.useProgram(this.#gl.program)
+
+        let numUniforms = gl.getProgramParameter(this.#gl.program, gl.ACTIVE_UNIFORMS)
+        for (let i = 0; i < numUniforms; i++) {
+            let name = gl.getActiveUniform(this.#gl.program, i).name
+            let uniform = this.#gl.uniforms[name]
+            
+            // switch (uniform.type) {
+                // texture, matrix, ...
+            // }
+            gl[uniform.type](uniform.location, this.uniforms[name].value)
+        }
     }
 
     destroy() {
