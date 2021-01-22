@@ -59,10 +59,11 @@ export class Program {
             let name = gl.getActiveUniform(this.#gl.program, i).name
             let uniform = this.#gl.uniforms[name]
             
-            // switch (uniform.type) {
-                // texture, matrix, ...
-            // }
-            gl[uniform.type](uniform.location, this.uniforms[name].value)
+            if (uniform.type.includes('Matrix')) {
+                gl[uniform.type](uniform.location, false, this.uniforms[name].value)
+            } else {
+                gl[uniform.type](uniform.location, this.uniforms[name].value)
+            }
         }
     }
 
@@ -112,8 +113,8 @@ function getUniformType(uniform) {
     if (uniform.value instanceof Vector2) return `uniformvec2fv`
     if (uniform.value instanceof Vector3) return `uniformvec3fv`
     if (uniform.value instanceof Vector4) return `uniformvec4fv`
-    if (uniform.value instanceof Matrix3) return `uniformMatrixmat3fv`
-    if (uniform.value instanceof Matrix4) return `uniformMatrixmat4fv`
+    if (uniform.value instanceof Matrix3) return `uniformMatrix3fv`
+    if (uniform.value instanceof Matrix4) return `uniformMatrix4fv`
     if (uniform.value instanceof Texture) return `uniform1i`
     if (uniform.value instanceof Color) return `uniformvec3fv`
 
