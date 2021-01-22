@@ -9,7 +9,7 @@ export class Matrix4 extends Array {
         // y1, y2, y3, y4,
         // z1, z2, z3, z4,
         // w1, w2, w3, w4
-        // ]
+        //]
     }
 
     identity() {
@@ -91,7 +91,7 @@ export class Matrix4 extends Array {
     //     out[10] = this[2] * m8 + this[6] * m9 + this[10] * m10
     //     out[11] = this[3] * m8 + this[7] * m9 + this[11] * m10
     //     this.copy(out)
-    //         // console.log(out);
+    //         // console.log(out)
     //     return this
     // }
     rotate(euler) {
@@ -155,8 +155,50 @@ export class Matrix4 extends Array {
         out[13] = b[12] * a[1] + b[13] * a[5] + b[14] * a[9] + b[15] * a[13]
         out[14] = b[12] * a[2] + b[13] * a[6] + b[14] * a[10] + b[15] * a[14]
         out[15] = b[12] * a[3] + b[13] * a[7] + b[14] * a[11] + b[15] * a[15]
-
         this.copy(out)
+
+        return this
+    }
+
+    inverse() {
+        const out = []
+        let m0 = this[0] * this[5] - this[1] * this[4]
+        let m1 = this[0] * this[6] - this[2] * this[4]
+        let m2 = this[0] * this[7] - this[3] * this[4]
+        let m3 = this[1] * this[6] - this[2] * this[5]
+        let m4 = this[1] * this[7] - this[3] * this[5]
+        let m5 = this[2] * this[7] - this[3] * this[6]
+        let m6 = this[8] * this[13] - this[9] * this[12]
+        let m7 = this[8] * this[14] - this[10] * this[12]
+        let m8 = this[8] * this[15] - this[11] * this[12]
+        let m9 = this[9] * this[14] - this[10] * this[13]
+        let m10 = this[9] * this[15] - this[11] * this[13]
+        let m11 = this[10] * this[15] - this[11] * this[14]
+
+        let det = m0 * m11 - m1 * m10 + m2 * m9 + m3 * m8 - m4 * m7 + m5 * m6
+        if (!det) {
+            return null
+        }
+        det = 1.0 / det
+
+        out[0] = (this[5] * m11 - this[6] * m10 + this[7] * m9) * det
+        out[1] = (this[2] * m10 - this[1] * m11 - this[3] * m9) * det
+        out[2] = (this[13] * m5 - this[14] * m4 + this[15] * m3) * det
+        out[3] = (this[10] * m4 - this[9] * m5 - this[11] * m3) * det
+        out[4] = (this[6] * m8 - this[4] * m11 - this[7] * m7) * det
+        out[5] = (this[0] * m11 - this[2] * m8 + this[3] * m7) * det
+        out[6] = (this[14] * m2 - this[12] * m5 - this[15] * m1) * det
+        out[7] = (this[8] * m5 - this[10] * m2 + this[11] * m1) * det
+        out[8] = (this[4] * m10 - this[5] * m8 + this[7] * m6) * det
+        out[9] = (this[1] * m8 - this[0] * m10 - this[3] * m6) * det
+        out[10] = (this[12] * m4 - this[13] * m2 + this[15] * m0) * det
+        out[11] = (this[9] * m2 - this[8] * m4 - this[11] * m0) * det
+        out[12] = (this[5] * m7 - this[4] * m9 - this[6] * m6) * det
+        out[13] = (this[0] * m9 - this[1] * m7 + this[2] * m6) * det
+        out[14] = (this[13] * m1 - this[12] * m3 - this[14] * m0) * det
+        out[15] = (this[8] * m3 - this[9] * m1 + this[10] * m0) * det
+        this.copy(out)
+
         return this
     }
 
@@ -164,5 +206,7 @@ export class Matrix4 extends Array {
         matrix.forEach((val, i) => {
             this[i] = val
         })
+
+        return this
     }
 }

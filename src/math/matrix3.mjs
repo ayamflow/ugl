@@ -75,9 +75,36 @@ export class Matrix3 extends Array {
         return this
     }
 
+    invert() {
+        let m0 = this[8] * this[4] - this[5] * this[7]
+        let m1 = -this[8] * this[3] + this[5] * this[6]
+        let m2 = this[7] * this[3] - this[4] * this[6]
+
+        let det = this[0] * m0 + this[1] * m1 + this[2] * m2
+        if (!det) {
+            return null
+        }
+        det = 1.0 / det
+
+        out[0] = m0 * det
+        out[1] = (-this[8] * this[1] + this[2] * this[7]) * det
+        out[2] = (this[5] * this[1] - this[2] * this[4]) * det
+        out[3] = m1 * det
+        out[4] = (this[8] * this[0] - this[2] * this[6]) * det
+        out[5] = (-this[5] * this[0] + this[2] * this[3]) * det
+        out[6] = m2 * det
+        out[7] = (-this[7] * this[0] + this[1] * this[6]) * det
+        out[8] = (this[4] * this[0] - this[1] * this[3]) * det
+        this.copy(out)
+        
+        return this
+    }
+
     copy(matrix) {
         matrix.forEach((val, i) => {
             this[i] = val
         })
+
+        return this
     }
 }
