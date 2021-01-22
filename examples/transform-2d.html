@@ -10,12 +10,13 @@
     <body>
         <canvas></canvas>
         <script type="module">
-            import { Renderer, Mesh, Program, Geometry } from '../src/index.mjs'
+            import { Renderer, Mesh, Program, Geometry, Transform } from '../src/index.mjs'
 
             let renderer
             let geometry
             let program
             let mesh
+            let group
             let time = 0
 
             function init() {
@@ -83,8 +84,10 @@
                 
                 // Mesh
                 mesh = new Mesh(geometry, program)
+                group = new Transform()
+                group.addChild(mesh)
 
-                console.log({renderer, program, geometry, mesh});
+                console.log({renderer, group, mesh})
             }
 
             function update() {
@@ -94,11 +97,14 @@
                 renderer.clear(true, true, true)
                 
                 time += 0.01
-                mesh.position.x = 0.5 * Math.cos(time)
-                mesh.position.y = 0.5 * Math.sin(time)
-                mesh.scale.set(0.2 + 0.8 * Math.abs(Math.cos(time * 2)))
-                mesh.updateWorldMatrix()
-                renderer.render(mesh)
+                
+                group.position.x = 0.5 * Math.cos(time)
+                group.position.y = 0.5 * Math.sin(time)
+                mesh.scale.set(0.1 + 0.4 * Math.abs(Math.cos(time * 2)))
+                
+                group.updateWorldMatrix()
+                
+                renderer.render(group)
             }
 
             init()
