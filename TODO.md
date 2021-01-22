@@ -1,9 +1,8 @@
+- 3d geom (cube or other)
 - textures
-- matrix / vector classes
 - frame buffer
 - vao?
 - cameras
-- render list (get single mesh or children from scene)
 - renderer options (alpha, etc)
 - dirty / needsUpdate flag for attributes, program, geometry
 - figure out lib/module import/package field
@@ -21,4 +20,7 @@ Readme:
 - Avoid singleton & static classes
 - abstract away the `gl` variable
 - POJO for attributes and uniforms
-- 
+- resources:
+https://webgl2fundamentals.org
+https://learnopengl.com/Getting-started/Transformations
+http://www.opengl-tutorial.org/beginners-tutorials/tutorial-4-a-colored-cube/
