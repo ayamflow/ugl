@@ -53,8 +53,8 @@ export class Renderer {
         const gl = this.#gl
         gl.viewport(0, 0, this.#canvas.width, this.#canvas.height)
 
-        // gl.enable(gl.CULL_FACE)
-        // gl.enable(gl.DEPTH_TEST)
+        gl.enable(gl.CULL_FACE)
+        gl.enable(gl.DEPTH_TEST)
         this.#renderList.setFrom(scene)
         this.#renderList.objects.forEach(object => object.render(gl))
     }
