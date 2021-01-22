@@ -1,7 +1,10 @@
+import { RenderList } from './renderlist.mjs'
+
 export class Renderer {
     #gl
     #canvas
     #pixelRatio
+    #renderList
 
     constructor(options) {
         let canvas = options.canvas || document.createElement('canvas')
@@ -20,6 +23,7 @@ export class Renderer {
 
         this.#gl = gl
         this.#canvas = canvas
+        this.#renderList = new RenderList()
     }
 
     setPixelRatio(dpr) {
@@ -45,9 +49,14 @@ export class Renderer {
         gl.clear(bits)
     }
 
-    render(mesh, camera) {
-        this.#gl.viewport(0, 0, this.#canvas.width, this.#canvas.height)
-        mesh.render(this.#gl)
+    render(scene, camera) {
+        const gl = this.#gl
+        gl.viewport(0, 0, this.#canvas.width, this.#canvas.height)
+
+        // gl.enable(gl.CULL_FACE)
+        // gl.enable(gl.DEPTH_TEST)
+        this.#renderList.setFrom(scene)
+        this.#renderList.objects.forEach(object => object.render(gl))
     }
 
     destroy() {
