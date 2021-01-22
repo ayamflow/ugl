@@ -1,9 +1,16 @@
-export class Mesh {
+import { Transform } from './transform.mjs'
+
+export class Mesh extends Transform {
     #gl
 
     constructor(geometry, program) {
+        super()
         this.geometry = geometry
         this.program = program
+
+        this.program.uniforms.modelMatrix = {
+            value: this.localMatrix
+        }
     }
 
     compile(gl) {
