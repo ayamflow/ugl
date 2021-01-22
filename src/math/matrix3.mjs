@@ -40,14 +40,16 @@ export class Matrix3 extends Array {
     }
 
     rotate(angle) {
-        let cos = Math.cos(angle)
-        let sin = Math.sin(angle)
-        this[0] = this[0] * cos + this[3] * sin
-        this[1] = this[1] * cos + this[4] * sin
-        this[2] = this[2] * cos + this[5] * sin
-        this[3] = this[3] * cos - this[0] * sin
-        this[4] = this[4] * cos - this[1] * sin
-        this[5] = this[5] * cos - this[2] * sin
+        const out = []
+        const cos = Math.cos(angle)
+        const sin = Math.sin(angle)
+        out[0] = this[0] * cos + this[3] * sin
+        out[1] = this[1] * cos + this[4] * sin
+        out[2] = this[2] * cos + this[5] * sin
+        out[3] = this[3] * cos - this[0] * sin
+        out[4] = this[4] * cos - this[1] * sin
+        out[5] = this[5] * cos - this[2] * sin
+        this.copy(out)
 
         return this
     }
@@ -68,8 +70,8 @@ export class Matrix3 extends Array {
         out[6] = b[6] * a[0] + b[7] * a[3] + b[8] * a[6]
         out[7] = b[6] * a[1] + b[7] * a[4] + b[8] * a[7]
         out[8] = b[6] * a[2] + b[7] * a[5] + b[8] * a[8]
-        
         this.copy(out)
+        
         return this
     }
 
