@@ -49,9 +49,85 @@ export class Matrix4 extends Array {
         return this
     }
 
-    rotate(vec) {
-        // TODO
-        
+    // rotate(angle, axis) {
+    //     // bro honestly this one I just copypasta
+    //     // https://github.com/toji/gl-matrix/blob/master/src/mat4.js#L612
+
+    //     const out = []
+
+    //     const cos = Math.cos(angle)
+    //     const sin = Math.sin(angle)
+    //     const tan = 1 - cos
+    //     let x = axis[0]
+    //     let y = axis[1]
+    //     let z = axis[2]
+    //     const len = 1 / Math.hypot(x, y, z)
+
+    //     x *= len
+    //     y *= len
+    //     z *= len
+
+    //     let m0 = x * x * tan + cos
+    //     let m1 = y * x * tan + z * sin
+    //     let m2 = z * x * tan - y * sin
+    //     let m4 = x * y * tan - z * sin
+    //     let m5 = y * y * tan + cos
+    //     let m6 = z * y * tan + x * sin
+    //     let m8 = x * z * tan + y * sin
+    //     let m9 = y * z * tan - x * sin
+    //     let m10 = z * z * tan + cos
+    //     console.log({x, tan, cos})
+
+    //     out[0] = this[0] * m0 + this[4] * m1 + this[8] * m2
+    //     out[1] = this[1] * m0 + this[5] * m1 + this[9] * m2
+    //     out[2] = this[2] * m0 + this[6] * m1 + this[10] * m2
+    //     out[3] = this[3] * m0 + this[7] * m1 + this[11] * m2
+    //     out[4] = this[0] * m4 + this[4] * m5 + this[8] * m6
+    //     out[5] = this[1] * m4 + this[5] * m5 + this[9] * m6
+    //     out[6] = this[2] * m4 + this[6] * m5 + this[10] * m6
+    //     out[7] = this[3] * m4 + this[7] * m5 + this[11] * m6
+    //     out[8] = this[0] * m8 + this[4] * m9 + this[8] * m10
+    //     out[9] = this[1] * m8 + this[5] * m9 + this[9] * m10
+    //     out[10] = this[2] * m8 + this[6] * m9 + this[10] * m10
+    //     out[11] = this[3] * m8 + this[7] * m9 + this[11] * m10
+    //     this.copy(out)
+    //         // console.log(out);
+    //     return this
+    // }
+    rotate(euler) {
+        // https://github.com/mrdoob/three.js/blob/master/src/math/Matrix4.js#L144
+        const out = []
+        const { x, y, z } = euler
+        const cosX = Math.cos(x)
+        const sinX = Math.sin(x)
+        const cosY = Math.cos(y)
+        const sinY = Math.sin(y)
+        const cosZ = Math.cos(z)
+        const sinZ = Math.sin(z)
+
+        const xz = cosX * cosZ
+        const xsz = cosX * sinZ
+        const sxz = sinX * cosZ
+        const sxsz = sinX * sinZ
+
+        out[0] = cosY * cosZ
+        out[1] = xsz + sxz * sinY
+        out[2] = sxsz - xz * sinY
+        out[3] = 0
+        out[4] = - cosY * sinZ
+        out[5] = xz - sxsz * sinY
+        out[6] = sxz + xsz * sinY
+        out[7] = 0
+        out[8] = sinY
+        out[9] = - sinX * cosY
+        out[10] = cosX * cosY
+        out[11] = 0
+        out[12] = 0
+        out[13] = 0
+        out[14] = 0
+        out[15] = 1
+        this.multiply(out)
+
         return this
     }
 
