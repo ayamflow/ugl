@@ -1,0 +1,113 @@
+<html>
+    <head>
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas></canvas>
+        <script type="module">
+            import { Renderer, Mesh, Program, Geometry } from '../src/index.mjs'
+            import * as buffers from './buffers.mjs'
+
+            let renderer
+            let geometry
+            let program
+            let mesh
+            let time = 0
+
+            function init() {
+                // Renderer
+                renderer = new Renderer({
+                    canvas: document.querySelector('canvas')
+                })
+                renderer.setPixelRatio(1)
+                renderer.setSize(innerWidth, innerHeight)
+
+                // Geometry
+                const scheme = [
+                    [1, 0, 0],
+                    [0, 1, 0],
+                    [0, 0, 1],
+                    [1, 1, 0],
+                    [1, 0, 1],
+                    [0, 1, 1]
+                ]
+                const colors = scheme.map((color, i) => {
+                    const data = []
+                    for (let i = 0; i < 6; i++) {
+                        data.push(color)
+                    }
+                    return data.flat()
+                }).flat()
+                geometry = new Geometry({
+                    position: {
+                        name: 'position',
+                        value: new Float32Array(buffers.cube),
+                        size: 3
+                    },
+                    color: {
+                        name: 'color',
+                        value: new Float32Array(colors),
+                        size: 3
+                    }
+                })
+
+                // Program / shader
+                program = new Program({
+                    vertex: `#version 300 es
+                    
+                        uniform mat4 modelMatrix;
+                        in vec4 position;
+                        in vec3 color;
+                        in vec2 uv;
+                        out vec3 vColor;
+                        
+                        void main() {
+                            vColor = color;
+                            gl_Position = modelMatrix * position;
+                        }
+                    `,
+                    fragment: `#version 300 es
+                        precision highp float;
+
+                        in vec3 vColor;
+                        out vec4 fragColor;
+
+                        void main() {
+                            fragColor = vec4(vColor, 1.0);
+                        }
+                    `
+                })
+                
+                // Mesh
+                mesh = new Mesh(geometry, program)
+
+                console.log({renderer, mesh})
+            }
+
+            function update() {
+                requestAnimationFrame(update)
+                
+                renderer.gl.clearColor(0, 0, 0, 1)
+                renderer.clear(true, true, true)
+                
+                time += 0.01
+                
+                mesh.rotation.x = time * 1.5
+                mesh.rotation.y = time
+                mesh.scale.set(0.5)
+                mesh.updateWorldMatrix()
+                
+                renderer.render(mesh)
+            }
+
+            init()
+            update()
+            
+        </script>
+    </body>
+</html>
