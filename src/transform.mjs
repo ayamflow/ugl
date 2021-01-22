@@ -8,6 +8,9 @@ export class Transform {
         this.scale = new Vector3(1, 1, 1)
         this.localMatrix = new Matrix4()
         this.worldMatrix = new Matrix4()
+
+        this.children = []
+        this.parent = null
     }
 
     updateLocalMatrix() {
@@ -21,6 +24,24 @@ export class Transform {
     updateWorldMatrix() {
         this.updateLocalMatrix()
         this.worldMatrix.copy(this.localMatrix)
+        if (this.parent) {
+            this.worldMatrix.multiply(this.parent.worldMatrix)
+        }
+
+        this.children.forEach(child => child.updateWorldMatrix())
     }
+
+    addChild(child) {
+        if (child.parent) {
+            child.parent.removeChild(child)
+        }
+
+        child.parent = this
+        this.children.push(child)
+    }
+
+    removeChild(child) {
+        child.parent = null
+        this.children.splice(this.children.indexOf(child), 1)
     }
 }

@@ -9,7 +9,7 @@ export class Mesh extends Transform {
         this.program = program
 
         this.program.uniforms.modelMatrix = {
-            value: this.localMatrix
+            value: this.worldMatrix
         }
     }
 
