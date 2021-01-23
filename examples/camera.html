@@ -1,0 +1,171 @@
+<html>
+    <head>
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+                cursor: pointer;
+            }
+
+            .label {
+                position: absolute;
+                left: 40px;
+                bottom: 40px;
+                font-family: Arial, Helvetica, sans-serif;
+                font-weight: bold;
+                font-size: 24px;
+                color: white;
+                user-select: none;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas></canvas>
+        <div class="label"></div>
+        <script type="module">
+            import { Renderer, Mesh, Program, Geometry, Camera, Transform } from '../src/index.mjs'
+            import * as buffers from './buffers.mjs'
+
+            const label = document.querySelector('.label')
+            let gl
+            let renderer
+            let geometry
+            let program
+            let camera
+            let group
+            let time = 0
+
+            function init() {
+                // Renderer
+                renderer = new Renderer({
+                    canvas: document.querySelector('canvas')
+                })
+                gl = renderer.gl
+                renderer.setPixelRatio(1)
+                renderer.setSize(innerWidth, innerHeight)
+
+                // Geometry
+                const scheme = [
+                    [1, 0, 0],
+                    [0, 1, 0],
+                    [0, 0, 1],
+                    [1, 1, 0],
+                    [1, 0, 1],
+                    [0, 1, 1]
+                ]
+                const colors = scheme.map((color, i) => {
+                    const data = []
+                    for (let i = 0; i < 6; i++) {
+                        data.push(color)
+                    }
+                    return data.flat()
+                }).flat()
+                geometry = new Geometry({
+                    position: {
+                        name: 'position',
+                        value: new Float32Array(buffers.cube),
+                        size: 3
+                    },
+                    color: {
+                        name: 'color',
+                        value: new Float32Array(colors),
+                        size: 3
+                    }
+                })
+
+                // Camera
+                camera = new Camera()
+
+                let isOrtho = true
+                function toggleCamera() {
+                    if (isOrtho) {
+                        camera.perspective({
+                            fov: 45,
+                            aspect: innerWidth/innerHeight,
+                            near: 1,
+                            far: 1000
+                        })
+                    } else {
+                        camera.orthographic({
+                            left: -innerWidth * 0.5,
+                            right: innerWidth * 0.5,
+                            top: -innerHeight * 0.5,
+                            bottom: innerHeight * 0.5,
+                            near: -1000,
+                            far: 1000
+                        })
+                    }
+
+                    isOrtho = !isOrtho
+                    label.textContent = isOrtho ? 'Orthographic' : 'Perspective'
+                }
+                window.addEventListener('click', toggleCamera)
+                toggleCamera()
+                
+                // Mesh
+                group = new Transform()
+                for (let i = 0; i < 6; i++) {
+                    // Program / shader
+                program = new Program({
+                    vertex: `#version 300 es
+                    
+                        uniform mat4 modelMatrix;
+                        uniform mat4 viewMatrix;
+                        uniform mat4 projectionMatrix;
+                        in vec4 position;
+                        in vec3 color;
+                        in vec2 uv;
+                        out vec3 vColor;
+                        
+                        void main() {
+                            vColor = color;
+                            gl_Position = projectionMatrix * viewMatrix * modelMatrix * position;
+                        }
+                    `,
+                    fragment: `#version 300 es
+                        precision highp float;
+
+                        in vec3 vColor;
+                        out vec4 fragColor;
+
+                        void main() {
+                            fragColor = vec4(vColor, 1.0);
+                        }
+                    `
+                    })
+                    let mesh = new Mesh(geometry, program)
+                    mesh.scale.set(100)
+                    mesh.position.x = 5 * Math.cos(i * Math.PI * 2 / 6)
+                    mesh.position.y = 5 * Math.sin(i * Math.PI * 2 / 6)
+                    group.addChild(mesh)
+                }
+
+                console.log({renderer, camera, group})
+            }
+
+            function update() {
+                requestAnimationFrame(update)
+                
+                gl.clearColor(0, 0, 0, 1)
+                gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+                
+                time += 0.01
+                
+                // group.children.forEach(mesh => {
+                //     mesh.rotation.x = time
+                //     mesh.rotation.z = time
+                // })
+                group.position.set(-150, 0, -300)
+
+                group.updateWorldMatrix()
+                // camera.lookAt(group.children[0].position)
+
+                renderer.render(group, camera)
+            }
+
+            init()
+            update()
+            
+        </script>
+    </body>
+</html>
