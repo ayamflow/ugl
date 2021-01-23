@@ -90,7 +90,7 @@ export class Matrix4 extends Array {
     //     out[9] = this[1] * m8 + this[5] * m9 + this[9] * m10
     //     out[10] = this[2] * m8 + this[6] * m9 + this[10] * m10
     //     out[11] = this[3] * m8 + this[7] * m9 + this[11] * m10
-    //     this.copy(out)
+    //     this.set(out)
     //         // console.log(out)
     //     return this
     // }
@@ -155,7 +155,7 @@ export class Matrix4 extends Array {
         out[13] = b[12] * a[1] + b[13] * a[5] + b[14] * a[9] + b[15] * a[13]
         out[14] = b[12] * a[2] + b[13] * a[6] + b[14] * a[10] + b[15] * a[14]
         out[15] = b[12] * a[3] + b[13] * a[7] + b[14] * a[11] + b[15] * a[15]
-        this.copy(out)
+        this.set(out)
 
         return this
     }
@@ -197,12 +197,15 @@ export class Matrix4 extends Array {
         out[13] = (this[0] * m9 - this[1] * m7 + this[2] * m6) * det
         out[14] = (this[13] * m1 - this[12] * m3 - this[14] * m0) * det
         out[15] = (this[8] * m3 - this[9] * m1 + this[10] * m0) * det
-        this.copy(out)
+        this.set(out)
 
         return this
     }
 
-    copy(matrix) {
+        return this
+    }
+
+    set(matrix) {
         matrix.forEach((val, i) => {
             this[i] = val
         })

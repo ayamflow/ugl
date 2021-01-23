@@ -23,7 +23,7 @@ export class Transform {
 
     updateWorldMatrix() {
         this.updateLocalMatrix()
-        this.worldMatrix.copy(this.localMatrix)
+        this.worldMatrix.set(this.localMatrix)
         if (this.parent) {
             this.worldMatrix.multiply(this.parent.worldMatrix)
         }

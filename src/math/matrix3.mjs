@@ -49,7 +49,7 @@ export class Matrix3 extends Array {
         out[3] = this[3] * cos - this[0] * sin
         out[4] = this[4] * cos - this[1] * sin
         out[5] = this[5] * cos - this[2] * sin
-        this.copy(out)
+        this.set(out)
 
         return this
     }
@@ -70,7 +70,7 @@ export class Matrix3 extends Array {
         out[6] = b[6] * a[0] + b[7] * a[3] + b[8] * a[6]
         out[7] = b[6] * a[1] + b[7] * a[4] + b[8] * a[7]
         out[8] = b[6] * a[2] + b[7] * a[5] + b[8] * a[8]
-        this.copy(out)
+        this.set(out)
         
         return this
     }
@@ -95,12 +95,12 @@ export class Matrix3 extends Array {
         out[6] = m2 * det
         out[7] = (-this[7] * this[0] + this[1] * this[6]) * det
         out[8] = (this[4] * this[0] - this[1] * this[3]) * det
-        this.copy(out)
+        this.set(out)
         
         return this
     }
 
-    copy(matrix) {
+    set(matrix) {
         matrix.forEach((val, i) => {
             this[i] = val
         })

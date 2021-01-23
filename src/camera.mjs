@@ -40,6 +40,6 @@ export class Camera extends Transform {
 
     updateWorldMatrix() {
         super.updateWorldMatrix()
-        this.viewMatrix.copy(this.worldMatrix).inverse()
+        this.viewMatrix.set(this.worldMatrix).inverse()
     }
 }
