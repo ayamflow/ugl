@@ -1,10 +1,15 @@
 import { Vector2, Vector3, Vector4, Matrix3, Matrix4, Color } from './math/index.mjs'
 import { Texture } from './texture.mjs'
 
+var UID = 0
+
 export class Program {
     #gl
+    #id
 
     constructor(options = {}) {
+        this.#id = UID++
+
         this.needsUpdate = true
         this.vertex = options.vertex
         this.fragment = options.fragment
@@ -20,6 +25,10 @@ export class Program {
                 this.uniforms[key] = options[key]
             }
         })
+    }
+
+    get id() {
+        return this.#id
     }
 
     compile(gl) {
@@ -53,16 +62,18 @@ export class Program {
         return this.#gl
     }
     
-    render(gl) {
+    render(gl, lastProgramId) {
         if (!this.#gl || this.needsUpdate) this.compile(gl)
 
-        gl.useProgram(this.#gl.program)
+        if (lastProgramId != this.#id) {
+            gl.useProgram(this.#gl.program)
+        }
 
         let numUniforms = gl.getProgramParameter(this.#gl.program, gl.ACTIVE_UNIFORMS)
         for (let i = 0; i < numUniforms; i++) {
             let name = gl.getActiveUniform(this.#gl.program, i).name
             let uniform = this.#gl.uniforms[name]
-            
+
             if (uniform.type.includes('Matrix')) {
                 gl[uniform.type](uniform.location, false, this.uniforms[name].value)
             } else {
