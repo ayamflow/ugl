@@ -8,9 +8,7 @@ export class Mesh extends Transform {
         this.geometry = geometry
         this.program = program
 
-        this.program.uniforms.modelMatrix = {
-            value: this.worldMatrix
-        }
+        this.program.uniforms.modelMatrix.value = this.worldMatrix
     }
 
     compile(gl) {

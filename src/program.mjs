@@ -9,7 +9,11 @@ export class Program {
         this.vertex = options.vertex
         this.fragment = options.fragment
         
-        this.uniforms = {}
+        this.uniforms = {
+            viewMatrix: { value: null },
+            modelMatrix: { value: null },
+            projectionMatrix: { value: null }
+        }
         Object.keys(options).forEach(key => {
             const uniform = options[key]
             if (uniform.value != undefined) {

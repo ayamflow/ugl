@@ -55,8 +55,17 @@ export class Renderer {
 
         gl.enable(gl.CULL_FACE)
         gl.enable(gl.DEPTH_TEST)
+        
+        camera.updateWorldMatrix()
+        
         this.#renderList.setFrom(scene)
-        this.#renderList.objects.forEach(object => object.render(gl))
+        let programId = null
+        this.#renderList.objects.forEach(object => {
+            object.program.uniforms.viewMatrix.value = camera.worldMatrix
+            object.program.uniforms.projectionMatrix.value = camera.projectionMatrix
+            object.render(gl, programId)
+            programId = object.program.id
+        })
     }
 
     destroy() {
