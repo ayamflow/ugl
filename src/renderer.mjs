@@ -16,7 +16,7 @@ export class Renderer {
         }
         let gl = canvas.getContext('webgl2', glOptions)
         if (!gl) {
-            throw new Error('WebGL2 is not supported')
+            throw new Error('[µgl] WebGL2 is not supported')
         }
 
         this.setPixelRatio(window.devicePixelRatio || 1)
