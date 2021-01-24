@@ -56,14 +56,16 @@ export class Renderer {
         gl.enable(gl.CULL_FACE)
         gl.enable(gl.DEPTH_TEST)
         
-        camera.updateWorldMatrix()
+        if (camera) camera.updateWorldMatrix()
         
         this.#renderList.setFrom(scene)
         let programId = null
         this.#renderList.objects.forEach(object => {
-            object.program.uniforms.viewMatrix.value = camera.worldMatrix
-            object.program.uniforms.projectionMatrix.value = camera.projectionMatrix
             object.render(gl, programId)
+            if (camera) {
+                object.program.uniforms.viewMatrix.value = camera.worldMatrix
+                object.program.uniforms.projectionMatrix.value = camera.projectionMatrix
+            }
             programId = object.program.id
         })
     }
