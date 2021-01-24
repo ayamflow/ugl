@@ -25,10 +25,10 @@ export class Mesh extends Transform {
         return this.#gl
     }
     
-    render(gl, lastProgramId) {
+    render(gl, options = {}) {
         if (!this.#gl) this.compile(gl)
 
-        this.program.render(gl, lastProgramId)
+        this.program.render(gl, options)
         this.geometry.render(gl, this.#gl.program.program)
     }
 }

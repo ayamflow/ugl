@@ -41,13 +41,14 @@ export class Program {
         const uniforms = {}
         Object.keys(this.uniforms).forEach(key => {
             const uniform = this.uniforms[key]
-            if (uniform.value == undefined) throw new Error(`[µgl] The uniform ${key} has no value`)
+            if (uniform.value == undefined && uniform.value !== null) throw new Error(`[µgl] The uniform ${key} has no value`)
             const location = gl.getUniformLocation(program, key)
             const type = getUniformType(uniform)
 
             uniforms[key] = {
                 location,
-                type
+                type,
+                value: uniform.value
             }
         })
 
@@ -62,7 +63,7 @@ export class Program {
         return this.#gl
     }
     
-    render(gl, lastProgramId) {
+    render(gl, {lastProgramId, textureId} = {}) {
         if (!this.#gl || this.needsUpdate) this.compile(gl)
 
         if (lastProgramId != this.#id) {
@@ -74,7 +75,10 @@ export class Program {
             let name = gl.getActiveUniform(this.#gl.program, i).name
             let uniform = this.#gl.uniforms[name]
 
-            if (uniform.type.includes('Matrix')) {
+            if (uniform.value instanceof Texture) {
+                gl[uniform.type](uniform.location, textureId)
+                uniform.value.render(gl, {textureId})
+            } else if (uniform.value instanceof Matrix3 || uniform.value instanceof Matrix4) {
                 gl[uniform.type](uniform.location, false, this.uniforms[name].value)
             } else {
                 gl[uniform.type](uniform.location, this.uniforms[name].value)

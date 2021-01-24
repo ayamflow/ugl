@@ -60,12 +60,13 @@ export class Renderer {
         
         this.#renderList.setFrom(scene)
         let programId = null
+        let textureId = 0
         this.#renderList.objects.forEach(object => {
-            object.render(gl, programId)
             if (camera) {
                 object.program.uniforms.viewMatrix.value = camera.worldMatrix
                 object.program.uniforms.projectionMatrix.value = camera.projectionMatrix
             }
+            object.render(gl, {programId, textureId})
             programId = object.program.id
         })
     }
