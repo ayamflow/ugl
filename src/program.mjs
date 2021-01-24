@@ -129,9 +129,9 @@ function createProgram(gl, vertexShader, fragmentShader) {
 }
 
 function getUniformType(uniform) {
-    if (uniform.value instanceof Vector2) return `uniformvec2fv`
-    if (uniform.value instanceof Vector3) return `uniformvec3fv`
-    if (uniform.value instanceof Vector4) return `uniformvec4fv`
+    if (uniform.value instanceof Vector2) return `uniform2fv`
+    if (uniform.value instanceof Vector3) return `uniform3fv`
+    if (uniform.value instanceof Vector4) return `uniform4fv`
     if (uniform.value instanceof Matrix3) return `uniformMatrix3fv`
     if (uniform.value instanceof Matrix4) return `uniformMatrix4fv`
     if (uniform.value instanceof Texture) return `uniform1i`
