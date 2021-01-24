@@ -20,7 +20,7 @@ export class Geometry {
 
             attribute.count = attribute.value.length / attribute.size
 
-            let location = gl.getAttribLocation(program, attribute.name)
+            let location = gl.getAttribLocation(program, key)
             let buffer = gl.createBuffer()
             gl.bindBuffer(gl.ARRAY_BUFFER, buffer)
             gl.bufferData(gl.ARRAY_BUFFER, attribute.value, gl.STATIC_DRAW)
