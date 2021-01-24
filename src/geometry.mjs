@@ -1,16 +1,10 @@
-export const MODES = {
-    TRIANGLES: 'TRIANGLES',
-    LINES: 'LINES',
-    POINTS: 'POINTS'
-}
-
 export class Geometry {
     #gl
 
-    constructor(attributes = {}) {
+    constructor(attributes = {}, mode) {
         this.needsUpdate = true
         this.attributes = {}
-        this.mode = MODES.TRIANGLES // better way to do it?
+        this.mode = mode
 
         if (attributes) Object.keys(attributes).forEach(key => {
             this.attributes[key] = attributes[key]
@@ -61,6 +55,6 @@ export class Geometry {
             gl.vertexAttribPointer(attribute.location, attribute.size, attribute.type, false, 0, 0) // normalize // stride // offset
         })
 
-        gl.drawArrays(gl[this.mode], 0, this.attributes.position.count)
+        gl.drawArrays(this.mode || gl.TRIANGLES, 0, this.attributes.position.count)
     }
 }
