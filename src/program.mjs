@@ -13,6 +13,10 @@ export class Program {
         this.needsUpdate = true
         this.vertex = options.vertex
         this.fragment = options.fragment
+
+        this.depthTest = options.depthTest || true
+        this.depthWrite = options.depthWrite || true
+        this.side = options.side // null is Double Sided / no culling
         
         this.uniforms = {
             viewMatrix: { value: null },
@@ -69,6 +73,20 @@ export class Program {
         if (lastProgramId != this.#id) {
             gl.useProgram(this.#gl.program)
         }
+
+        // Cull test/side
+        if (this.side) {
+            gl.enable(gl.CULL_FACE)
+            gl.cullFace(this.side)
+        } else {
+            gl.disable(gl.CULL_FACE)
+        }
+
+        // Depth test/write
+        // gl.depthFunc(gl.LESS) // Default
+        if (this.depthTest) gl.enable(gl.DEPTH_TEST)
+        else gl.disable(gl.DEPTH_TEST)
+        gl.depthMask(this.depthWrite)
 
         let numUniforms = gl.getProgramParameter(this.#gl.program, gl.ACTIVE_UNIFORMS)
         for (let i = 0; i < numUniforms; i++) {

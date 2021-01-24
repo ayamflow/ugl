@@ -52,9 +52,6 @@ export class Renderer {
     render(scene, camera) {
         const gl = this.#gl
         gl.viewport(0, 0, this.#canvas.width, this.#canvas.height)
-
-        gl.enable(gl.CULL_FACE)
-        gl.enable(gl.DEPTH_TEST)
         
         if (camera) camera.updateWorldMatrix()
         
