@@ -38,7 +38,7 @@ export class Geometry {
                 buffer,
                 size: attribute.size,
                 count: attribute.count,
-                type: gl[attribute.type] || gl.FLOAT
+                type: attribute.type || gl.FLOAT
             }
         })
 
