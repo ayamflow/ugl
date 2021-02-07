@@ -105,18 +105,21 @@ export class Program {
         else gl.disable(gl.DEPTH_TEST)
         gl.depthMask(this.depthWrite)
 
-        let numUniforms = gl.getProgramParameter(this.#gl.program, gl.ACTIVE_UNIFORMS)
+        const numUniforms = gl.getProgramParameter(this.#gl.program, gl.ACTIVE_UNIFORMS)
         for (let i = 0; i < numUniforms; i++) {
-            let name = gl.getActiveUniform(this.#gl.program, i).name
-            let uniform = this.#gl.uniforms[name]
+            const name = gl.getActiveUniform(this.#gl.program, i).name
+            const uniform = this.#gl.uniforms[name]
+            const value = this.uniforms[name].value
 
-            if (uniform.value instanceof Texture) {
+            // TODO: new uniforms might need location
+
+            if (value instanceof Texture) {
                 gl[uniform.type](uniform.location, textureId)
-                uniform.value.render(gl, {textureId})
-            } else if (uniform.value instanceof Matrix3 || uniform.value instanceof Matrix4) {
-                gl[uniform.type](uniform.location, false, this.uniforms[name].value)
+                value.render(gl, {textureId})
+            } else if (value instanceof Matrix3 || value instanceof Matrix4) {
+                gl[uniform.type](uniform.location, false, value)
             } else {
-                gl[uniform.type](uniform.location, this.uniforms[name].value)
+                gl[uniform.type](uniform.location, value)
             }
         }
     }
