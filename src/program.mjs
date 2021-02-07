@@ -60,12 +60,25 @@ export class Program {
             }
         }
 
+        // Attributes location
+        const attributes = {}
+        const numAttribs = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES)
+        for (let i = 0; i < numAttribs; i++) {
+            const name = gl.getActiveAttrib(program, i).name
+            const location = gl.getAttribLocation(program, name)
+
+            attributes[name] = {
+                location
+            }
+        }
+
         this.needsUpdate = false
         this.#gl = {
             vertexShader,
             fragmentShader,
             program,
-            uniforms
+            uniforms,
+            attributes
         }
 
         return this.#gl
