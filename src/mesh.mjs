@@ -25,7 +25,14 @@ export class Mesh extends Transform {
         return this.#gl
     }
     
-    render(gl, options = {}) {
+    render(gl, camera, options = {}) {
+        const uniforms = this.program.uniforms
+        uniforms.modelMatrix.value = this.worldMatrix
+        if (camera) {
+            uniforms.viewMatrix.value = camera.worldMatrix
+            uniforms.projectionMatrix.value = camera.projectionMatrix
+        }
+
         if (!this.#gl) this.compile(gl)
 
         this.program.render(gl, options)
