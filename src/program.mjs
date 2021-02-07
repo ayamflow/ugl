@@ -42,19 +42,23 @@ export class Program {
         const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER,this.fragment)
         const program = createProgram(gl, vertexShader, fragmentShader)
 
+        // Uniforms location
         const uniforms = {}
-        Object.keys(this.uniforms).forEach(key => {
-            const uniform = this.uniforms[key]
-            if (uniform.value == undefined && uniform.value !== null) throw new Error(`[µgl] The uniform ${key} has no value`)
-            const location = gl.getUniformLocation(program, key)
+        const numUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS)
+        for (let i = 0; i < numUniforms; i++) {
+            const name = gl.getActiveUniform(program, i).name
+            const uniform = this.uniforms[name]
+            if (uniform.value == undefined && uniform.value !== null) {
+                throw new Error(`[µgl] The uniform ${key} has no value`)
+            }
+            const location = gl.getUniformLocation(program, name)
             const type = getUniformType(uniform)
 
-            uniforms[key] = {
+            uniforms[name] = {
                 location,
-                type,
-                value: uniform.value
+                type
             }
-        })
+        }
 
         this.needsUpdate = false
         this.#gl = {
